@@ -1,15 +1,7 @@
 package de.pburke;
 
 
-import java.util.*;
-
 public class Main {
-    public Stack<Valuation> backtrackAlternatives = new Stack<>();
-    public int decisionLevel = 0;
-
-    enum State {
-        CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE, NOT_SATISFIABLE
-    }
 
     public static void main(String[] args) {
         var x_0 = new Variable(0, 0);
@@ -34,71 +26,14 @@ public class Main {
         });
 
         // Assign variables separately for easier retrieval during decision step
+        // and to use the same order as described in the assignment.
         f.variables = new Variables(x_0, x_1, x_2, x_3);
 
-        var main = new Main();
+        var solver = new CspSolver(f);
         try {
-            main.start(f);
+            solver.start(f);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void start(Formula formula) throws Exception {
-        var currentState = State.CONSISTENCY_CHECK;
-
-        mainLoop: while (true) {
-            switch (currentState) {
-                case CONSISTENCY_CHECK:
-                    currentState = consistencyCheck(formula);
-                    break;
-                case BACKTRACK:
-                    currentState = backtrack();
-                    break;
-                case DECISION:
-                    currentState = decision(formula);
-                    break;
-                case SATISFIABLE:
-                    System.out.println("The formula is satisfiable.");
-                    break mainLoop;
-                case NOT_SATISFIABLE:
-                    System.out.println("The formula is not satisfiable.");
-                    break mainLoop;
-                default:
-                    break mainLoop;
-            }
-        }
-    }
-
-    public State consistencyCheck(Formula formula) {
-        if (formula.isTrue()) return State.SATISFIABLE;
-        if (formula.isFalse()) return State.BACKTRACK;
-
-        return State.DECISION;
-    }
-
-    public State decision(Formula formula) throws Exception {
-        var splitVariable = formula.variables.getSplitVariable();
-
-        int half = (splitVariable.max - splitVariable.min) / 2;
-        var lowerHalf = splitVariable.valuation(splitVariable.min, half);
-        var upperHalf = splitVariable.valuation(half + 1, splitVariable.max);
-        lowerHalf.activate();
-
-        backtrackAlternatives.push(upperHalf);
-        decisionLevel++;
-
-        return State.CONSISTENCY_CHECK;
-    }
-
-    public State backtrack() {
-        if (backtrackAlternatives.empty()) return State.NOT_SATISFIABLE;
-
-        var previousValuation = backtrackAlternatives.pop();
-        decisionLevel--;
-
-        previousValuation.activate();
-
-        return State.CONSISTENCY_CHECK;
     }
 }
