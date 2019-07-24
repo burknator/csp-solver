@@ -58,7 +58,7 @@ public class CspSolver {
     public State decision() throws Exception {
         var splitVariable = formula.variables.getSplitVariable();
 
-        int half = (splitVariable.max - splitVariable.min) / 2;
+        int half = (splitVariable.max - splitVariable.min + 1) / 2;
         var lowerHalf = splitVariable.valuation(splitVariable.min, half);
         var upperHalf = splitVariable.valuation(half + 1, splitVariable.max);
         lowerHalf.activate();
