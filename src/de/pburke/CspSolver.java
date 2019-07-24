@@ -5,8 +5,7 @@ import java.util.Stack;
 public class CspSolver {
     public Formula formula;
     private Stack<Valuation> backtrackAlternatives = new Stack<>();
-    private int decisionLevel = 0;
-    
+
     enum State {
         CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE, NOT_SATISFIABLE
     }
@@ -15,6 +14,10 @@ public class CspSolver {
 
     public CspSolver(Formula formula) {
         this.formula = formula;
+    }
+
+    public int getDecisionLevel() {
+        return backtrackAlternatives.size();
     }
 
     public void start(Formula formula) throws Exception {
@@ -59,7 +62,6 @@ public class CspSolver {
         lowerHalf.activate();
 
         backtrackAlternatives.push(upperHalf);
-        decisionLevel++;
 
         return State.CONSISTENCY_CHECK;
     }
@@ -68,7 +70,6 @@ public class CspSolver {
         if (backtrackAlternatives.empty()) return State.NOT_SATISFIABLE;
 
         var previousValuation = backtrackAlternatives.pop();
-        decisionLevel--;
 
         previousValuation.activate();
 
