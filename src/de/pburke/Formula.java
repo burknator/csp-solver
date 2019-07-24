@@ -1,7 +1,11 @@
 package de.pburke;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class Formula {
     public Constraint[] constraints;
+    public ArrayList<Variable> variables;
 
     Formula(Constraint[] constraints) {
         this.constraints = constraints;
