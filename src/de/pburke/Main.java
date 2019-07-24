@@ -31,7 +31,16 @@ public class Main {
 
         var solver = new CspSolver(f);
         try {
-            solver.start(f);
+            var result = solver.start();
+
+            switch (result) {
+                case SATISFIABLE:
+                    System.out.println("The formula is satisfiable.");
+                    break;
+                case NOT_SATISFIABLE:
+                    System.out.println("The formula is not satisfiable.");
+                    break;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

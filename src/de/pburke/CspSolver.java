@@ -10,6 +10,10 @@ public class CspSolver {
         CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE, NOT_SATISFIABLE
     }
 
+    enum Result {
+        SATISFIABLE, NOT_SATISFIABLE
+    }
+
     public CspSolver() { }
 
     public CspSolver(Formula formula) {
@@ -20,40 +24,38 @@ public class CspSolver {
         return backtrackAlternatives.size();
     }
 
-    public void start(Formula formula) throws Exception {
+    public Result start() throws Exception {
         var currentState = State.CONSISTENCY_CHECK;
 
         mainLoop: while (true) {
             switch (currentState) {
                 case CONSISTENCY_CHECK:
-                    currentState = consistencyCheck(formula);
+                    currentState = consistencyCheck();
                     break;
                 case BACKTRACK:
                     currentState = backtrack();
                     break;
                 case DECISION:
-                    currentState = decision(formula);
+                    currentState = decision();
                     break;
                 case SATISFIABLE:
-                    System.out.println("The formula is satisfiable.");
-                    break mainLoop;
+                    return Result.SATISFIABLE;
                 case NOT_SATISFIABLE:
-                    System.out.println("The formula is not satisfiable.");
-                    break mainLoop;
+                    return Result.NOT_SATISFIABLE;
                 default:
-                    break mainLoop;
+                    throw new Exception("Something horribly must've happened!");
             }
         }
     }
 
-    public State consistencyCheck(Formula formula) {
+    public State consistencyCheck() {
         if (formula.isTrue()) return State.SATISFIABLE;
         if (formula.isFalse()) return State.BACKTRACK;
 
         return State.DECISION;
     }
 
-    public State decision(Formula formula) throws Exception {
+    public State decision() throws Exception {
         var splitVariable = formula.variables.getSplitVariable();
 
         int half = (splitVariable.max - splitVariable.min) / 2;
