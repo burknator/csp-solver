@@ -1,16 +1,11 @@
 package de.pburke;
 
-import de.pburke.exceptions.NoVariables;
-import de.pburke.exceptions.OnlyPointIntervals;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     public Stack<Valuation> backtrackAlternatives = new Stack<>();
     public int decisionLevel = 0;
-    public int variableIndex = 0;
-    public HashMap<Integer, Boolean> validLists = new HashMap<Integer, Boolean>();
 
     enum State {
         CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE, NOT_SATISFIABLE
@@ -39,7 +34,7 @@ public class Main {
         });
 
         // Assign variables separately for easier retrieval during decision step
-        f.variables = new ArrayList<>(Arrays.asList(x_0, x_1, x_2, x_3));
+        f.variables = new Variables(x_0, x_1, x_2, x_3);
 
         var main = new Main();
         try {
@@ -83,7 +78,7 @@ public class Main {
     }
 
     public State decision(Formula formula) throws Exception {
-        var splitVariable = findSplitVariable(formula.variables);
+        var splitVariable = formula.variables.getSplitVariable();
 
         int half = (splitVariable.max - splitVariable.min) / 2;
         var lowerHalf = splitVariable.valuation(splitVariable.min, half);
@@ -105,30 +100,5 @@ public class Main {
         previousValuation.activate();
 
         return State.CONSISTENCY_CHECK;
-    }
-
-    public Variable findSplitVariable(ArrayList<Variable> variables) throws Exception {
-        if (variables.isEmpty())
-            throw new NoVariables("Formula contains no variables, cannot perform decision step.");
-
-        if (!validLists.containsKey(variables.hashCode())) {
-            var t = variables.stream()
-                    .filter(variable -> !variable.isPointInterval())
-                    .collect(Collectors.toList());
-
-            validLists.put(variables.hashCode(), !t.isEmpty());
-        }
-
-        if (!validLists.get(variables.hashCode()))
-            throw new OnlyPointIntervals("Formula contains only point intervals, cannot perform decision step.");
-
-        Variable splitVariable;
-
-        do {
-            splitVariable = variables.get(variableIndex);
-            variableIndex = (variableIndex + 1) % variables.size();
-        } while(splitVariable.isPointInterval());
-
-        return splitVariable;
     }
 }
