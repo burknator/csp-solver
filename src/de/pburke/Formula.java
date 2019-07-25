@@ -1,11 +1,14 @@
 package de.pburke;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Formula {
-    public Constraint[] constraints;
+    public ArrayList<Constraint> constraints;
     public Variables variables;
 
     Formula(Constraint[] constraints) {
-        this.constraints = constraints;
+        this.constraints = new ArrayList<>(Arrays.asList(constraints));
     }
 
     public boolean isTrue() {

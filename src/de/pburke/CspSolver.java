@@ -43,7 +43,7 @@ public class CspSolver {
                 case NOT_SATISFIABLE:
                     return Result.NOT_SATISFIABLE;
                 default:
-                    throw new Exception("Something horribly must've happened!");
+                    throw new Exception("Something horrible must've happened!");
             }
         }
     }
