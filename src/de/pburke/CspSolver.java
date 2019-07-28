@@ -1,5 +1,9 @@
 package de.pburke;
 
+import de.pburke.exceptions.BaseException;
+import de.pburke.exceptions.InvalidVariableCreation;
+import de.pburke.exceptions.InvalidVariables;
+
 import java.util.Stack;
 
 public class CspSolver {
@@ -24,7 +28,7 @@ public class CspSolver {
         return backtrackAlternatives.size();
     }
 
-    public Result start() throws Exception {
+    public Result start() throws BaseException {
         var currentState = State.CONSISTENCY_CHECK;
 
         mainLoop: while (true) {
@@ -44,12 +48,12 @@ public class CspSolver {
                 case NOT_SATISFIABLE:
                     return Result.NOT_SATISFIABLE;
                 default:
-                    throw new Exception("Something horrible must've happened!");
+                    throw new BaseException("Something horrible must've happened!");
             }
         }
     }
 
-    public State consistencyCheck() {
+    public State consistencyCheck() throws InvalidVariableCreation {
         log("Making consistency check");
         if (formula.isTrue()) {
             log("Formula " + formula.name + " is true:");
@@ -105,7 +109,7 @@ public class CspSolver {
         return State.DECISION;
     }
 
-    public State decision() throws Exception {
+    public State decision() throws InvalidVariables, InvalidVariableCreation {
         log("Decision step");
         var splitVariable = formula.variables.getSplitVariable();
 

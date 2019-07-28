@@ -1,5 +1,6 @@
 package de.pburke;
 
+import de.pburke.exceptions.InvalidVariableCreation;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -19,7 +20,7 @@ public class ConstraintTest {
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() throws InvalidVariableCreation {
         var x_0 = new Variable("x_0", 0, 3);
         var x_1 = new Variable("x_1", 4, 5);
         var simpleBound = new SimpleBound(x_0, x_1, 5);

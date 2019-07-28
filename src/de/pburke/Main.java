@@ -1,9 +1,12 @@
 package de.pburke;
 
 
+import de.pburke.exceptions.BaseException;
+import de.pburke.exceptions.InvalidVariableCreation;
+
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws InvalidVariableCreation {
         var x_0 = new Variable("x_0", 0, 0);
         var x_1 = new Variable("x_1", 3, 6);
         var x_2 = new Variable("x_2", -6, 4);
@@ -41,7 +44,7 @@ public class Main {
                     System.out.println("The formula is not satisfiable.");
                     break;
             }
-        } catch (Exception e) {
+        } catch (BaseException e) {
             e.printStackTrace();
         }
     }

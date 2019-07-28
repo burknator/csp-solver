@@ -1,5 +1,7 @@
 package de.pburke;
 
+import de.pburke.exceptions.BaseException;
+import de.pburke.exceptions.InvalidVariableCreation;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,12 +11,12 @@ public class CspSolverTest {
     CspSolver solver;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         solver = new CspSolver();
     }
 
     @Test
-    public void solve1() throws Exception {
+    public void solve1() throws BaseException {
         var x_0 = new Variable("x_0", 0, 0);
         var x_1 = new Variable("x_1", 3, 6);
         var x_2 = new Variable("x_2", -6, 4);
@@ -48,7 +50,7 @@ public class CspSolverTest {
     }
 
     @Test
-    public void solve2() throws Exception {
+    public void solve2() throws BaseException {
         var x_0 = new Variable(0, 0);
         var x_1 = new Variable(3, 6);
         var x_2 = new Variable(-6, 4);
@@ -74,7 +76,7 @@ public class CspSolverTest {
     }
 
     @Test
-    public void solve3() throws Exception {
+    public void solve3() throws BaseException {
         var x_0 = new Variable(0, 0);
         var x_1 = new Variable(3, 6);
         var x_2 = new Variable(-6, 4);
@@ -100,7 +102,7 @@ public class CspSolverTest {
     }
 
     @Test
-    public void solve4() throws Exception {
+    public void solve4() throws BaseException {
         var x_0 = new Variable(0, 0);
         var x_1 = new Variable(3, 6);
         var x_2 = new Variable(-6, 4);
@@ -126,7 +128,7 @@ public class CspSolverTest {
     }
 
     @Test
-    public void solve5() throws Exception {
+    public void solve5() throws BaseException {
         solver.formula = new Formula(new Constraint[]{
             new Constraint(new SimpleBound[]{
                 new SimpleBound(4, 10)
@@ -139,7 +141,7 @@ public class CspSolverTest {
     }
 
     @Test
-    public void solve6() throws Exception {
+    public void solve6() throws BaseException {
         var x_0 = new Variable("x_0", 0, 0);
         var x_1 = new Variable("x_1", 1, 6);
         var x_2 = new Variable("x_2", -2, 3);

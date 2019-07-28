@@ -44,7 +44,7 @@ public class Variables {
         return valid;
     }
 
-    public Variable getSplitVariable() throws Exception {
+    public Variable getSplitVariable() throws InvalidVariables {
         if (!isValid())
             throw new InvalidVariables("The set of variables of this formula are invalid.");
 

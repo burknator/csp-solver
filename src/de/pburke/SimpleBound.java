@@ -1,5 +1,6 @@
 package de.pburke;
 
+import de.pburke.exceptions.InvalidVariableCreation;
 import jdk.jshell.spi.ExecutionControl;
 
 public class SimpleBound {
@@ -17,7 +18,7 @@ public class SimpleBound {
         try {
             this.x = new Variable("CONST_1", x, x);
             this.y = new Variable("CONST_2", 0, 0);
-        } catch (Exception e) { }
+        } catch (InvalidVariableCreation e) { }
         this.k = k;
     }
 

@@ -1,17 +1,19 @@
 package de.pburke;
 
+import de.pburke.exceptions.InvalidVariableCreation;
+
 public class Valuation extends Variable {
     public Variable variable;
 
-    Valuation(Variable variable) throws Exception {
+    Valuation(Variable variable) throws InvalidVariableCreation {
         super(variable.min, variable.max);
         this.variable = variable;
     }
 
-    Valuation(int min, int max, Variable variable) throws Exception {
+    Valuation(int min, int max, Variable variable) throws InvalidVariableCreation {
         super(min, max);
         if (min < variable.min || max > variable.max) {
-            throw new Exception("The valuation must conform to the upper and lower bounds of the variable it's for.");
+            throw new InvalidVariableCreation("The valuation must conform to the upper and lower bounds of the variable it's for.");
         }
 
         this.variable = variable;

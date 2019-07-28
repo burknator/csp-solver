@@ -1,5 +1,6 @@
 package de.pburke;
 
+import de.pburke.exceptions.InvalidVariableCreation;
 import de.pburke.exceptions.InvalidVariables;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class VariablesTest {
     }
 
     @Test
-    public void getSplitVariableValid() throws Exception {
+    public void getSplitVariableValid() throws InvalidVariableCreation, InvalidVariables {
         var variables = new ArrayList<>(Arrays.asList(
                 new Variable(0, 0),
                 new Variable(3, 6),
@@ -38,7 +39,7 @@ public class VariablesTest {
     }
 
     @Test(expected = InvalidVariables.class)
-    public void getSplitVariableOnlyPointIntervals() throws Exception {
+    public void getSplitVariableOnlyPointIntervals() throws InvalidVariableCreation, InvalidVariables {
         var variables = new ArrayList<>(Arrays.asList(
             new Variable(0, 0),
             new Variable(3, 3)
@@ -54,7 +55,7 @@ public class VariablesTest {
     }
 
     @Test(expected = InvalidVariables.class)
-    public void getSplitVariableNoEmptyList() throws Exception {
+    public void getSplitVariableNoEmptyList() throws InvalidVariables {
         instance.getSplitVariable();
     }
 }

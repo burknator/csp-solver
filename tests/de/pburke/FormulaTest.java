@@ -1,5 +1,6 @@
 package de.pburke;
 
+import de.pburke.exceptions.InvalidVariableCreation;
 import org.junit.Test;
 
 import java.text.Normalizer;
@@ -9,7 +10,7 @@ import static org.junit.Assert.*;
 public class FormulaTest {
 
     @Test
-    public void isTrue() throws Exception {
+    public void isTrue() throws InvalidVariableCreation {
         var x_0 = new Variable("x_0", 1, 3);
         var x_1 = new Variable("x_1", 0,0);
         var simpleBound = new SimpleBound(x_0, x_1, 1);
@@ -20,7 +21,7 @@ public class FormulaTest {
     }
 
     @Test
-    public void isFalse() throws Exception {
+    public void isFalse() throws InvalidVariableCreation {
         var x_0 = new Variable("x_0", 0, 0);
         var x_1 = new Variable("x_1", 1,1);
         var x_2 = new Variable("x_2", -2, 3);
@@ -56,7 +57,7 @@ public class FormulaTest {
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() throws InvalidVariableCreation {
         var x_0 = new Variable("x_0", 0, 3);
         var x_1 = new Variable("x_1", 4, 5);
         var simpleBound = new SimpleBound(x_0, x_1, 5);
