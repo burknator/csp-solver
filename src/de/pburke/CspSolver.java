@@ -8,6 +8,7 @@ import java.util.Stack;
 
 public class CspSolver {
     public Formula formula;
+    public boolean enableDeductionStep = true;
     private Stack<Valuation> backtrackAlternatives = new Stack<>();
 
     enum State {
@@ -30,8 +31,9 @@ public class CspSolver {
 
     public Result start() throws BaseException {
         var currentState = State.CONSISTENCY_CHECK;
+        var steps = 0;
 
-        mainLoop: while (true) {
+        while (true) {
             log("-".repeat(72));
             switch (currentState) {
                 case CONSISTENCY_CHECK:
@@ -44,12 +46,17 @@ public class CspSolver {
                     currentState = decision();
                     break;
                 case SATISFIABLE:
+                    logValuation();
+                    log("Completed in " + steps + " steps.");
                     return Result.SATISFIABLE;
                 case NOT_SATISFIABLE:
+                    logValuation();
+                    log("Completed in " + steps + " steps.");
                     return Result.NOT_SATISFIABLE;
                 default:
                     throw new BaseException("Something horrible must've happened!");
             }
+            steps++;
         }
     }
 
@@ -88,6 +95,16 @@ public class CspSolver {
                 }
             }
             return State.BACKTRACK;
+        }
+
+        if (enableDeductionStep) {
+            for (Constraint constraint : formula.constraints) {
+                if (constraint.isUnit()) {
+                    for (SimpleBound bound : constraint.simpleBounds) {
+                        bound.calculateNewValuation();
+                    }
+                }
+            }
         }
 
         log("Formula " + formula.name + " is inconclusive:");
@@ -155,6 +172,13 @@ public class CspSolver {
 
     private void log(String message, int indent) {
         System.out.println("\t".repeat(indent) + message);
+    }
+
+    private void logValuation() {
+        log("Valuation:");
+        for (Variable variable : formula.variables.getVariables()) {
+            log(variable.name + ": " + variable, 1);
+        }
     }
 
     public int splitRange(int min, int max) {

@@ -41,4 +41,17 @@ public class SimpleBound {
     public String toString() {
         return x.name + " ≥ " + y.name + " + " + k;
     }
+
+    public void calculateNewValuation() throws InvalidVariableCreation {
+        var xMax = x.max;
+        if (!x.isPointInterval()) {
+            System.out.println("Deducing new valuation for " + x.name);
+            x.valuation(Math.max(x.min, y.min + k), x.max).activate();
+        }
+
+        if (!y.isPointInterval()) {
+            System.out.println("Deducing new valuation for " + y.name);
+            y.valuation(y.min, Math.max(y.min, Math.min(y.max, xMax - k))).activate();
+        }
+    }
 }

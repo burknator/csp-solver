@@ -40,6 +40,17 @@ public class Constraint {
         return false;
     }
 
+    public boolean isUnit() {
+        int i = 0;
+        int f = 0;
+        for (SimpleBound bound : simpleBounds) {
+            if (bound.isInconclusive()) i++;
+            else if (bound.isFalse()) f++;
+        }
+
+         return  i + f == simpleBounds.size();
+    }
+
     public String toString() {
         StringBuilder out = new StringBuilder();
         boolean first = true;

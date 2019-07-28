@@ -34,6 +34,10 @@ public class Variables {
         return variables.get(index);
     }
 
+    public ArrayList<Variable> getVariables() {
+        return variables;
+    }
+
     public boolean addAll(Collection<Variable> collection) {
         return this.variables.addAll(collection);
     }

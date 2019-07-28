@@ -129,12 +129,14 @@ public class CspSolverTest {
 
     @Test
     public void solve5() throws BaseException {
+        SimpleBound simpleBound = new SimpleBound(4, 10);
         solver.formula = new Formula(new Constraint[]{
             new Constraint(new SimpleBound[]{
-                new SimpleBound(4, 10)
+                    simpleBound
             })
         });
 
+        solver.formula.variables = new Variables(simpleBound.x, simpleBound.y);
         var result = solver.start();
 
         assertEquals(result, CspSolver.Result.NOT_SATISFIABLE);
