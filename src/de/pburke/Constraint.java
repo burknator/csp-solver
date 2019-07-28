@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Constraint {
+    public String name = "";
     public ArrayList<SimpleBound> simpleBounds;
+
+    Constraint(String name, SimpleBound[] simpleBounds) {
+        this(simpleBounds);
+        this.name = name;
+    }
 
     Constraint(SimpleBound[] simpleBounds) {
         this.simpleBounds = new ArrayList<>(Arrays.asList(simpleBounds));
@@ -32,5 +38,18 @@ public class Constraint {
         }
 
         return true;
+
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        boolean first = true;
+        for (SimpleBound simpleBound : simpleBounds) {
+            if (!first) {
+                out.append(" ∨ ");
+            }
+            first = false;
+            out.append(simpleBound);
+        }
+
+        return out.toString();
     }
 }

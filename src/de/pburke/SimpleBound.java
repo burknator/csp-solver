@@ -14,8 +14,10 @@ public class SimpleBound {
     }
 
     SimpleBound(int x, int k) {
-        this.x = new Variable(x, x);
-        this.y = new Variable(0, 0);
+        try {
+            this.x = new Variable("CONST_1", x, x);
+            this.y = new Variable("CONST_2", 0, 0);
+        } catch (Exception e) { }
         this.k = k;
     }
 
@@ -33,5 +35,9 @@ public class SimpleBound {
 
     public boolean isInconclusive() {
         return !isTrue() && !isFalse();
+    }
+
+    public String toString() {
+        return x.name + " ≥ " + y.name + " + " + k;
     }
 }

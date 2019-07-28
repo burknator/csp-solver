@@ -1,10 +1,15 @@
 package de.pburke;
 
 public class Variable {
+    public String name = "";
     public int max;
     public int min;
 
-    public Variable(int min, int max) {
+    public Variable(String name, int min, int max) throws Exception {
+        this(min, max);
+        this.name = name;
+    }
+
         this.min = min;
         this.max = max;
     }
@@ -17,7 +22,7 @@ public class Variable {
         return new Valuation(min, max, this);
     }
 
-    public Valuation asValuation() {
-        return new Valuation(this);
+    public String toString() {
+        return "[" + this.min + ", " + this.max + "]";
     }
 }
