@@ -27,18 +27,19 @@ public class Formula {
 
     public boolean isFalse() {
         for (Constraint constraint : constraints) {
-            if (constraint.isFalse()) return true;
+            if (constraint.isTrue() || constraint.isInconclusive()) return false;
         }
 
-        return false;
+        return true;
     }
 
     public boolean isInconclusive() {
         for (Constraint constraint : constraints) {
-            if (!constraint.isInconclusive()) return false;
+            if (constraint.isInconclusive()) return true;
         }
 
-        return true;
+        return false;
+    }
 
     public String toString() {
         StringBuilder out = new StringBuilder();

@@ -106,14 +106,25 @@ public class CspSolver {
     }
 
     public State decision() throws Exception {
+        log("Decision step");
         var splitVariable = formula.variables.getSplitVariable();
 
-        int half = (splitVariable.max - splitVariable.min + 1) / 2;
-        var lowerHalf = splitVariable.valuation(splitVariable.min, half);
-        var upperHalf = splitVariable.valuation(half + 1, splitVariable.max);
-        lowerHalf.activate();
+        int diff = Math.abs(splitVariable.max - splitVariable.min);
+        Valuation lowerHalf;
+        Valuation upperHalf;
+        if (diff == 1) {
+            lowerHalf = splitVariable.valuation(splitVariable.min, splitVariable.min);
+            upperHalf = splitVariable.valuation(splitVariable.max, splitVariable.max);
+        } else {
+            int half = splitRange(splitVariable.min, splitVariable.max);
 
+            lowerHalf = splitVariable.valuation(splitVariable.min, half);
+            upperHalf = splitVariable.valuation(half + 1, splitVariable.max);
+        }
+        log("Splitting variable " + splitVariable.name + " into " + lowerHalf + " and " + upperHalf);
         backtrackAlternatives.push(upperHalf);
+        log("Opening decision level " + getDecisionLevel());
+        lowerHalf.activate();
 
         return State.CONSISTENCY_CHECK;
     }
@@ -140,5 +151,9 @@ public class CspSolver {
 
     private void log(String message, int indent) {
         System.out.println("\t".repeat(indent) + message);
+    }
+
+    public int splitRange(int min, int max) {
+        return (max + min) / 2;
     }
 }

@@ -34,10 +34,11 @@ public class Constraint {
 
     public boolean isInconclusive() {
         for (SimpleBound bound : simpleBounds) {
-            if (!bound.isInconclusive()) return false;
+            if (bound.isInconclusive()) return true;
         }
 
-        return true;
+        return false;
+    }
 
     public String toString() {
         StringBuilder out = new StringBuilder();
