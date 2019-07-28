@@ -20,5 +20,9 @@ public class Valuation extends Variable {
     public void activate() {
         this.variable.min = this.min;
         this.variable.max = this.max;
+
+        if (!variable.name.equals("")) {
+            System.out.println("Using valuation " + this + " for variable " + variable.name);
+        }
     }
 }

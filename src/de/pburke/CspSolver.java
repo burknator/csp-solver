@@ -28,6 +28,7 @@ public class CspSolver {
         var currentState = State.CONSISTENCY_CHECK;
 
         mainLoop: while (true) {
+            log("-".repeat(72));
             switch (currentState) {
                 case CONSISTENCY_CHECK:
                     currentState = consistencyCheck();
@@ -49,8 +50,57 @@ public class CspSolver {
     }
 
     public State consistencyCheck() {
-        if (formula.isTrue()) return State.SATISFIABLE;
-        if (formula.isFalse()) return State.BACKTRACK;
+        log("Making consistency check");
+        if (formula.isTrue()) {
+            log("Formula " + formula.name + " is true:");
+            for (Constraint constraint : formula.constraints) {
+                log("Constraint " + constraint.name + " is true:", 1);
+                for (SimpleBound bound : constraint.simpleBounds) {
+                    if (bound.isTrue()) {
+                        log("Simple bound " + bound + " is true with valuation:", 2);
+                        log(bound.x.name + ": " + bound.x, 3);
+                        log(bound.y.name + ": " + bound.y, 3);
+                        log("k: " + bound.k, 3);
+                    }
+                }
+            }
+
+            return State.SATISFIABLE;
+        }
+
+        if (formula.isFalse()) {
+            log("Formula " + formula.name + " is false:");
+            for (Constraint constraint : formula.constraints) {
+                if (constraint.isFalse()) {
+                    log("Constraint " + constraint.name + " is false:", 1);
+                    for (SimpleBound bound : constraint.simpleBounds) {
+                        if (bound.isFalse()) {
+                            log("Simple bound " + bound + " is false with valuation:", 2);
+                            log(bound.x.name + ": " + bound.x, 3);
+                            log(bound.y.name + ": " + bound.y, 3);
+                            log("k: " + bound.k, 3);
+                        }
+                    }
+                }
+            }
+            return State.BACKTRACK;
+        }
+
+        log("Formula " + formula.name + " is inconclusive:");
+        for (Constraint constraint : formula.constraints) {
+            if (constraint.isInconclusive()) {
+                log("Constraint " + constraint.name + " is inconclusive:", 1);
+                for (SimpleBound bound : constraint.simpleBounds) {
+                    if (bound.isInconclusive()) {
+                        log("Simple bound " + bound + " is inconclusive with valuation:", 2);
+                        log(bound.x.name + ": " + bound.x, 3);
+                        log(bound.y.name + ": " + bound.y, 3);
+                        log("k: " + bound.k, 3);
+                    }
+                }
+            }
+        }
+
 
         return State.DECISION;
     }
@@ -69,12 +119,26 @@ public class CspSolver {
     }
 
     public State backtrack() {
-        if (backtrackAlternatives.empty()) return State.NOT_SATISFIABLE;
+        log("Backtracking");
+
+        if (backtrackAlternatives.empty()) {
+            log("No backtrack alternatives available, formula " + formula.name + " is not satisfiable.");
+            return State.NOT_SATISFIABLE;
+        }
 
         var previousValuation = backtrackAlternatives.pop();
+        log("Returning to decision level " + getDecisionLevel());
 
         previousValuation.activate();
 
         return State.CONSISTENCY_CHECK;
+    }
+
+    private void log(String message) {
+        System.out.println(message);
+    }
+
+    private void log(String message, int indent) {
+        System.out.println("\t".repeat(indent) + message);
     }
 }
