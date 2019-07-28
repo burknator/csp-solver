@@ -3,11 +3,11 @@ package de.pburke;
 
 public class Main {
 
-    public static void main(String[] args) {
-        var x_0 = new Variable(0, 0);
-        var x_1 = new Variable(3, 6);
-        var x_2 = new Variable(-6, 4);
-        var x_3 = new Variable(-2, 5);
+    public static void main(String[] args) throws Exception {
+        var x_0 = new Variable("x_0", 0, 0);
+        var x_1 = new Variable("x_1", 3, 6);
+        var x_2 = new Variable("x_2", -6, 4);
+        var x_3 = new Variable("x_3", -2, 5);
 
         //noinspection SuspiciousNameCombination
         var f = new Formula(new Constraint[]{

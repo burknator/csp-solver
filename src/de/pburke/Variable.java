@@ -10,6 +10,10 @@ public class Variable {
         this.name = name;
     }
 
+    public Variable(int min, int max) throws Exception {
+        if (min > max)
+            throw new Exception("Invalid variable, min must be smaller or equal than max.");
+
         this.min = min;
         this.max = max;
     }

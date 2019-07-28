@@ -3,7 +3,7 @@ package de.pburke;
 public class Valuation extends Variable {
     public Variable variable;
 
-    Valuation(Variable variable) {
+    Valuation(Variable variable) throws Exception {
         super(variable.min, variable.max);
         this.variable = variable;
     }
