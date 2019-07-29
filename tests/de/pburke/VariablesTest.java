@@ -26,7 +26,7 @@ public class VariablesTest {
                 new Variable(-2, 5)
         ));
 
-        instance.addAll(variables);
+        var instance = new Variables(variables);
 
         var variable = instance.getSplitVariable();
         assertEquals(variable, variables.get(1));
@@ -45,7 +45,7 @@ public class VariablesTest {
             new Variable(3, 3)
         ));
 
-        instance.addAll(variables);
+        var instance = new Variables(variables);
 
         var variable = instance.getSplitVariable();
         assertEquals(variable, variables.get(1));
@@ -58,4 +58,32 @@ public class VariablesTest {
     public void getSplitVariableNoEmptyList() throws InvalidVariables {
         instance.getSplitVariable();
     }
+
+    @Test
+    public void isValid() throws InvalidVariableCreation {
+        var variable1 = new Variable(0, 0);
+
+        instance = new Variables(variable1);
+
+        assertFalse(instance.isValid());
+    }
+
+    @Test
+    public void isValidMultipleVars() throws InvalidVariableCreation {
+        var variable1 = new Variable(0, 0);
+        var variable2 = new Variable(0, 5);
+        instance = new Variables(variable1, variable2);
+
+        assertTrue(instance.isValid());
+    }
+
+    @Test
+    public void isValidMultipleVarsTrue() throws InvalidVariableCreation {
+        var variable1 = new Variable(0, 3);
+        var variable2 = new Variable(0, 5);
+        instance = new Variables(variable1, variable2);
+
+        assertTrue(instance.isValid());
+    }
+
 }

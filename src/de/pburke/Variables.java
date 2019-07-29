@@ -4,7 +4,6 @@ import de.pburke.exceptions.InvalidVariables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 public class Variables {
     private Boolean valid = null;
@@ -13,9 +12,13 @@ public class Variables {
 
     public Variables() { }
 
+    public Variables(ArrayList<Variable> list) {
+        this.variables.addAll(list);
+        checkValidity();
+    }
+
     public Variables(Variable... variables) {
         this.variables.addAll(Arrays.asList(variables));
-
         checkValidity();
     }
 
@@ -28,18 +31,6 @@ public class Variables {
         }
 
         valid = false;
-    }
-
-    public Variable get(int index) {
-        return variables.get(index);
-    }
-
-    public ArrayList<Variable> getVariables() {
-        return variables;
-    }
-
-    public boolean addAll(Collection<Variable> collection) {
-        return this.variables.addAll(collection);
     }
 
     public boolean isValid() {
@@ -60,5 +51,12 @@ public class Variables {
         } while(splitVariable.isPointInterval());
 
         return splitVariable;
+    }
+
+    public void logValuation() {
+        Logger.log("Valuation:");
+        for (Variable variable : variables) {
+            Logger.log(variable.name + ": " + variable, 1);
+        }
     }
 }

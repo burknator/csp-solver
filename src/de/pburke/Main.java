@@ -30,9 +30,9 @@ public class Main {
 
         // Assign variables separately for easier retrieval during decision step
         // and to use the same order as described in the assignment.
-        f.variables = new Variables(x_0, x_1, x_2, x_3);
 
         var solver = new CspSolver(f);
+        solver.variables = new Variables(x_0, x_1, x_2, x_3);
         try {
             var result = solver.start();
 

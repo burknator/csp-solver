@@ -10,6 +10,7 @@ public class CspSolver {
     public Formula formula;
     public boolean enableDeductionStep = true;
     private Stack<Valuation> backtrackAlternatives = new Stack<>();
+    public Variables variables;
 
     enum State {
         CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE, NOT_SATISFIABLE
@@ -46,11 +47,11 @@ public class CspSolver {
                     currentState = decision();
                     break;
                 case SATISFIABLE:
-                    logValuation();
+                    variables.logValuation();
                     Logger.log("Completed in " + steps + " steps.");
                     return Result.SATISFIABLE;
                 case NOT_SATISFIABLE:
-                    logValuation();
+                    variables.logValuation();
                     Logger.log("Completed in " + steps + " steps.");
                     return Result.NOT_SATISFIABLE;
                 default:
@@ -126,13 +127,12 @@ public class CspSolver {
             }
         }
 
-
         return State.DECISION;
     }
 
     public State decision() throws InvalidVariables, InvalidVariableCreation {
         Logger.log("Decision step");
-        var splitVariable = formula.variables.getSplitVariable();
+        var splitVariable = variables.getSplitVariable();
 
         int diff = Math.abs(splitVariable.max - splitVariable.min);
         Valuation lowerHalf;
@@ -168,13 +168,6 @@ public class CspSolver {
         previousValuation.activate();
 
         return State.CONSISTENCY_CHECK;
-    }
-
-    private void logValuation() {
-        Logger.log("Valuation:");
-        for (Variable variable : formula.variables.getVariables()) {
-            Logger.log(variable.name + ": " + variable, 1);
-        }
     }
 
     public int splitRange(int min, int max) {

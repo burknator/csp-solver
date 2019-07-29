@@ -2,6 +2,7 @@ package de.pburke;
 
 public class Logger {
     private static int indentation = 0;
+    private static boolean enabled = true;
 
     private Logger () { }
 
@@ -21,6 +22,14 @@ public class Logger {
         indentation = Math.max(0, indentation - by);
     }
 
+    public static void enable() {
+        enabled = true;
+    }
+
+    public static void disable() {
+        enabled = false;
+    }
+
     public static void log(String message, int indent) {
         print(message, indent);
     }
@@ -30,6 +39,7 @@ public class Logger {
     }
 
     private static void print(String message, int indentation) {
-        System.out.println("\t".repeat(indentation) + message);
+        if (enabled)
+            System.out.println("\t".repeat(indentation) + message);
     }
 }

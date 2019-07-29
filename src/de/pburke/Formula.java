@@ -6,7 +6,6 @@ import java.util.Arrays;
 public class Formula {
     public String name = "";
     public ArrayList<Constraint> constraints;
-    public Variables variables;
 
     Formula(String name, Constraint[] constraints) {
         this(constraints);

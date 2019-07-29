@@ -40,7 +40,7 @@ public class CspSolverTest {
 
         // Assign variables separately for easier retrieval during decision step
         // and to use the same order as described in the assignment.
-        formula.variables = new Variables(x_0, x_1, x_2, x_3);
+        solver.variables = new Variables(x_0, x_1, x_2, x_3);
 
         solver.formula = formula;
 
@@ -66,7 +66,7 @@ public class CspSolverTest {
 
         // Assign variables separately for easier retrieval during decision step
         // and to use the same order as described in the assignment.
-        formula.variables = new Variables(x_0, x_1, x_2, x_3);
+        solver.variables = new Variables(x_0, x_1, x_2, x_3);
 
         solver.formula = formula;
 
@@ -92,7 +92,7 @@ public class CspSolverTest {
 
         // Assign variables separately for easier retrieval during decision step
         // and to use the same order as described in the assignment.
-        formula.variables = new Variables(x_0, x_1, x_2, x_3);
+        solver.variables = new Variables(x_0, x_1, x_2, x_3);
 
         solver.formula = formula;
 
@@ -118,7 +118,7 @@ public class CspSolverTest {
 
         // Assign variables separately for easier retrieval during decision step
         // and to use the same order as described in the assignment.
-        formula.variables = new Variables(x_0, x_1, x_2, x_3);
+        solver.variables = new Variables(x_0, x_1, x_2, x_3);
 
         solver.formula = formula;
 
@@ -136,7 +136,7 @@ public class CspSolverTest {
             })
         });
 
-        solver.formula.variables = new Variables(simpleBound.x, simpleBound.y);
+        solver.variables = new Variables(simpleBound.x, simpleBound.y);
         var result = solver.start();
 
         assertEquals(result, CspSolver.Result.NOT_SATISFIABLE);
@@ -172,7 +172,7 @@ public class CspSolverTest {
 
         // Assign variables separately for easier retrieval during decision step
         // and to use the same order as described in the assignment.
-        formula.variables = new Variables(x_0, x_1, x_2);
+        solver.variables = new Variables(x_0, x_1, x_2);
 
         solver.formula = formula;
 
