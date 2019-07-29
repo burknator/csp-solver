@@ -34,7 +34,7 @@ public class CspSolver {
         var steps = 0;
 
         while (true) {
-            log("-".repeat(72));
+            Logger.log("-".repeat(72));
             switch (currentState) {
                 case CONSISTENCY_CHECK:
                     currentState = consistencyCheck();
@@ -47,11 +47,11 @@ public class CspSolver {
                     break;
                 case SATISFIABLE:
                     logValuation();
-                    log("Completed in " + steps + " steps.");
+                    Logger.log("Completed in " + steps + " steps.");
                     return Result.SATISFIABLE;
                 case NOT_SATISFIABLE:
                     logValuation();
-                    log("Completed in " + steps + " steps.");
+                    Logger.log("Completed in " + steps + " steps.");
                     return Result.NOT_SATISFIABLE;
                 default:
                     throw new BaseException("Something horrible must've happened!");
@@ -61,17 +61,17 @@ public class CspSolver {
     }
 
     public State consistencyCheck() throws InvalidVariableCreation {
-        log("Making consistency check");
+        Logger.log("Consistency check");
         if (formula.isTrue()) {
-            log("Formula " + formula.name + " is true:");
+            Logger.log("Formula " + formula.name + " is true:");
             for (Constraint constraint : formula.constraints) {
-                log("Constraint " + constraint.name + " is true:", 1);
+                Logger.log("Constraint " + constraint.name + " is true:", 1);
                 for (SimpleBound bound : constraint.simpleBounds) {
                     if (bound.isTrue()) {
-                        log("Simple bound " + bound + " is true with valuation:", 2);
-                        log(bound.x.name + ": " + bound.x, 3);
-                        log(bound.y.name + ": " + bound.y, 3);
-                        log("k: " + bound.k, 3);
+                        Logger.log("Simple bound " + bound + " is true with valuation:", 2);
+                        Logger.log(bound.x.name + ": " + bound.x, 3);
+                        Logger.log(bound.y.name + ": " + bound.y, 3);
+                        Logger.log("k: " + bound.k, 3);
                     }
                 }
             }
@@ -80,16 +80,16 @@ public class CspSolver {
         }
 
         if (formula.isFalse()) {
-            log("Formula " + formula.name + " is false:");
+            Logger.log("Formula " + formula.name + " is false:");
             for (Constraint constraint : formula.constraints) {
                 if (constraint.isFalse()) {
-                    log("Constraint " + constraint.name + " is false:", 1);
+                    Logger.log("Constraint " + constraint.name + " is false:", 1);
                     for (SimpleBound bound : constraint.simpleBounds) {
                         if (bound.isFalse()) {
-                            log("Simple bound " + bound + " is false with valuation:", 2);
-                            log(bound.x.name + ": " + bound.x, 3);
-                            log(bound.y.name + ": " + bound.y, 3);
-                            log("k: " + bound.k, 3);
+                            Logger.log("Simple bound " + bound + " is false with valuation:", 2);
+                            Logger.log(bound.x.name + ": " + bound.x, 3);
+                            Logger.log(bound.y.name + ": " + bound.y, 3);
+                            Logger.log("k: " + bound.k, 3);
                         }
                     }
                 }
@@ -98,25 +98,29 @@ public class CspSolver {
         }
 
         if (enableDeductionStep) {
+            Logger.log("Deducing new valuations");
             for (Constraint constraint : formula.constraints) {
                 if (constraint.isUnit()) {
+                    Logger.log("Constraint " + constraint.name + " is unit", 1);
+                    Logger.increaseIndentation(2);
                     for (SimpleBound bound : constraint.simpleBounds) {
                         bound.calculateNewValuation();
                     }
+                    Logger.decreaseIndentation(2);
                 }
             }
         }
 
-        log("Formula " + formula.name + " is inconclusive:");
+        Logger.log("Formula " + formula.name + " is inconclusive:");
         for (Constraint constraint : formula.constraints) {
             if (constraint.isInconclusive()) {
-                log("Constraint " + constraint.name + " is inconclusive:", 1);
+                Logger.log("Constraint " + constraint.name + " is inconclusive:", 1);
                 for (SimpleBound bound : constraint.simpleBounds) {
                     if (bound.isInconclusive()) {
-                        log("Simple bound " + bound + " is inconclusive with valuation:", 2);
-                        log(bound.x.name + ": " + bound.x, 3);
-                        log(bound.y.name + ": " + bound.y, 3);
-                        log("k: " + bound.k, 3);
+                        Logger.log("Simple bound " + bound + " is inconclusive with valuation:", 2);
+                        Logger.log(bound.x.name + ": " + bound.x, 3);
+                        Logger.log(bound.y.name + ": " + bound.y, 3);
+                        Logger.log("k: " + bound.k, 3);
                     }
                 }
             }
@@ -127,7 +131,7 @@ public class CspSolver {
     }
 
     public State decision() throws InvalidVariables, InvalidVariableCreation {
-        log("Decision step");
+        Logger.log("Decision step");
         var splitVariable = formula.variables.getSplitVariable();
 
         int diff = Math.abs(splitVariable.max - splitVariable.min);
@@ -142,42 +146,34 @@ public class CspSolver {
             lowerHalf = splitVariable.valuation(splitVariable.min, half);
             upperHalf = splitVariable.valuation(half + 1, splitVariable.max);
         }
-        log("Splitting variable " + splitVariable.name + " into " + lowerHalf + " and " + upperHalf);
+        Logger.log("Splitting variable " + splitVariable.name + " into " + lowerHalf + " and " + upperHalf);
         backtrackAlternatives.push(upperHalf);
-        log("Opening decision level " + getDecisionLevel());
+        Logger.log("Opening decision level " + getDecisionLevel());
         lowerHalf.activate();
 
         return State.CONSISTENCY_CHECK;
     }
 
     public State backtrack() {
-        log("Backtracking");
+        Logger.log("Backtracking");
 
         if (backtrackAlternatives.empty()) {
-            log("No backtrack alternatives available, formula " + formula.name + " is not satisfiable.");
+            Logger.log("No backtrack alternatives available, formula " + formula.name + " is not satisfiable.");
             return State.NOT_SATISFIABLE;
         }
 
         var previousValuation = backtrackAlternatives.pop();
-        log("Returning to decision level " + getDecisionLevel());
+        Logger.log("Returning to decision level " + getDecisionLevel());
 
         previousValuation.activate();
 
         return State.CONSISTENCY_CHECK;
     }
 
-    private void log(String message) {
-        System.out.println(message);
-    }
-
-    private void log(String message, int indent) {
-        System.out.println("\t".repeat(indent) + message);
-    }
-
     private void logValuation() {
-        log("Valuation:");
+        Logger.log("Valuation:");
         for (Variable variable : formula.variables.getVariables()) {
-            log(variable.name + ": " + variable, 1);
+            Logger.log(variable.name + ": " + variable, 1);
         }
     }
 

@@ -21,7 +21,7 @@ public class Valuation extends Variable {
 
     public void activate() {
         if (!variable.name.equals("")) {
-            System.out.println("Changing valuation for " + variable.name + " from " + variable + " to " + this);
+            Logger.log("Changing valuation for " + variable.name + " from " + variable + " to " + this);
         }
 
         this.variable.min = this.min;
