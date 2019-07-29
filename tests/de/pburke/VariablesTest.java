@@ -28,13 +28,13 @@ public class VariablesTest {
 
         var instance = new Variables(variables);
 
-        var variable = instance.getSplitVariable();
+        var variable = instance.findSplitVariable();
         assertEquals(variable, variables.get(1));
 
-        variable = instance.getSplitVariable();
+        variable = instance.findSplitVariable();
         assertEquals(variable, variables.get(2));
 
-        variable = instance.getSplitVariable();
+        variable = instance.findSplitVariable();
         assertEquals(variable, variables.get(3));
     }
 
@@ -47,16 +47,16 @@ public class VariablesTest {
 
         var instance = new Variables(variables);
 
-        var variable = instance.getSplitVariable();
+        var variable = instance.findSplitVariable();
         assertEquals(variable, variables.get(1));
 
-        variable = instance.getSplitVariable();
+        variable = instance.findSplitVariable();
         assertEquals(variable, variables.get(2));
     }
 
     @Test(expected = InvalidVariables.class)
     public void getSplitVariableNoEmptyList() throws InvalidVariables {
-        instance.getSplitVariable();
+        instance.findSplitVariable();
     }
 
     @Test

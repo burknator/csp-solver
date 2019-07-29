@@ -105,7 +105,7 @@ public class CspSolver {
                     Logger.log("Constraint " + constraint.name + " is unit", 1);
                     Logger.increaseIndentation(2);
                     for (SimpleBound bound : constraint.simpleBounds) {
-                        bound.deduceNewValuation();
+                        bound.deduceValuation();
                     }
                     Logger.decreaseIndentation(2);
                 }
@@ -132,7 +132,7 @@ public class CspSolver {
 
     public State decision() throws InvalidVariables, InvalidVariableCreation {
         Logger.log("Decision step");
-        var splitVariable = variables.getSplitVariable();
+        var splitVariable = variables.findSplitVariable();
 
         int diff = Math.abs(splitVariable.max - splitVariable.min);
         Valuation lowerHalf;

@@ -3,6 +3,9 @@ package de.pburke;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Represents a constraint: simpleBound1 ∨ simpleBound2 ∨ ...
+ */
 public class Constraint {
     public String name = "";
     public ArrayList<SimpleBound> simpleBounds;
@@ -16,6 +19,9 @@ public class Constraint {
         this.simpleBounds = new ArrayList<>(Arrays.asList(simpleBounds));
     }
 
+    /**
+     * @return True, when at least one bound true.
+     */
     public boolean isTrue() {
         for (SimpleBound bound : simpleBounds) {
             if (bound.isTrue()) return true;
@@ -24,6 +30,9 @@ public class Constraint {
         return false;
     }
 
+    /**
+     * @return True, when all bounds are false.
+     */
     public boolean isFalse() {
         for (SimpleBound bound : simpleBounds) {
             if (bound.isTrue() || bound.isInconclusive()) return false;
@@ -32,6 +41,9 @@ public class Constraint {
         return true;
     }
 
+    /**
+     * @return True, when at least one bound is inconclusive.
+     */
     public boolean isInconclusive() {
         for (SimpleBound bound : simpleBounds) {
             if (bound.isInconclusive()) return true;
@@ -40,6 +52,9 @@ public class Constraint {
         return false;
     }
 
+    /**
+     * @return True if all but one bound is false, and that one is inconclusive.
+     */
     public boolean isUnit() {
         int i = 0;
         int f = 0;

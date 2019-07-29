@@ -3,6 +3,10 @@ package de.pburke;
 import de.pburke.exceptions.InvalidVariableCreation;
 import jdk.jshell.spi.ExecutionControl;
 
+/**
+ * Represents a simple bound of this form: x ≥ y + k
+ * Where x and y are variables and k is a constant integer.
+ */
 public class SimpleBound {
     public Variable x;
     public Variable y;
@@ -14,11 +18,22 @@ public class SimpleBound {
         this.k = k;
     }
 
+    /**
+     * Create a simple bound using only two integers, making it possible to create a simple bound of this form: 4 ≥ -10
+     * 
+     * Internally, two point interval variables are created, one with the bounds equal to x, one with the bound equal to
+     * 0. k is taken from the parameters of this method. Thus the actual form is x ≥ 0 + k
+     * 
+     * @param x
+     * @param k
+     */
     SimpleBound(int x, int k) {
         try {
             this.x = new Variable("CONST_1", x, x);
             this.y = new Variable("CONST_2", 0, 0);
-        } catch (InvalidVariableCreation e) { }
+        } catch (InvalidVariableCreation e) {
+            // This exception occurs when the lower bound is higher than the upper one. This cannot happen here.
+        }
         this.k = k;
     }
 
@@ -42,7 +57,13 @@ public class SimpleBound {
         return x.name + " ≥ " + y.name + " + " + k;
     }
 
-    public void deduceNewValuation() throws InvalidVariableCreation {
+    /**
+     * Deduces new valuations for x and y if they're not point intervals.
+     * 
+     * FIXME This is more of a {@link CspSolver} thing, maybe put it here? Especially since the containing constraint
+     * needs to be unit for this to be doable.
+     */
+    public void deduceValuation() throws InvalidVariableCreation {
         var xMax = x.max;
         if (!x.isPointInterval()) {
             x.valuation(Math.max(x.min, y.min + k), x.max).activate();
