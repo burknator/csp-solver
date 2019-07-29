@@ -104,7 +104,7 @@ public class CspSolver {
                     Logger.log("Constraint " + constraint.name + " is unit", 1);
                     Logger.increaseIndentation(2);
                     for (SimpleBound bound : constraint.simpleBounds) {
-                        bound.calculateNewValuation();
+                        bound.deduceNewValuation();
                     }
                     Logger.decreaseIndentation(2);
                 }
