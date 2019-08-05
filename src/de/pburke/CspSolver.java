@@ -97,7 +97,7 @@ public class CspSolver {
             Logger.log("Deducing new valuations");
             var narrowingSuccessful = false;
             for (Constraint constraint : formula.constraints) {
-                if (constraint.isUnit()) continue;
+                if (!constraint.isUnit()) continue;
 
                 Logger.log("Constraint " + constraint.name + " is unit", 1);
                 Logger.increaseIndentation(2);
