@@ -63,7 +63,7 @@ public class Constraint {
             else if (bound.isFalse()) f++;
         }
 
-         return  i + f == simpleBounds.size();
+         return i == 1 && i + f == simpleBounds.size();
     }
 
     public String toString() {
