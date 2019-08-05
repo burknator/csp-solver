@@ -46,6 +46,14 @@ public class Formula {
         return f;
     }
 
+    public boolean hasFalseConstraint() {
+        for (Constraint constraint : constraints) {
+            if (constraint.isFalse()) return true;
+        }
+
+        return false;
+    }
+
     /**
      * @return True, when at least one constraint is inconclusive.
      */

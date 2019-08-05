@@ -62,15 +62,26 @@ public class SimpleBound {
      * 
      * FIXME This is more of a {@link CspSolver} thing, maybe put it here? Especially since the containing constraint
      * needs to be unit for this to be doable.
+     *
+     * @return Whether at least one variable could successfully be narrowed down.
      */
-    public void deduceValuation() throws InvalidVariableCreation {
+    public boolean deduceValuation() throws InvalidVariableCreation {
+        if (isFalse()) return false;
+
         var xMax = x.max;
+        var success = false;
         if (!x.isPointInterval()) {
-            x.valuation(Math.max(x.min, y.min + k), x.max).activate();
+            var newMin = Math.max(x.min, y.min + k);
+            if (newMin > x.min) success = true;
+            x.valuation(newMin, x.max).activate();
         }
 
         if (!y.isPointInterval()) {
-            y.valuation(y.min, Math.max(y.min, Math.min(y.max, xMax - k))).activate();
+            var newMax = Math.max(y.min, Math.min(y.max, xMax - k));
+            if (newMax < y.max) success = true;
+            y.valuation(y.min, newMax).activate();
         }
+
+        return success;
     }
 }

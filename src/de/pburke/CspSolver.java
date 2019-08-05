@@ -66,7 +66,11 @@ public class CspSolver {
 
     public State consistencyCheck() throws InvalidVariableCreation {
         Logger.log("Consistency check");
-        if (formula.isTrue()) {
+
+        if (formula.hasFalseConstraint()) {
+            Logger.log("At least one constraint in formula " + formula + " is false, backtracking.");
+            return State.BACKTRACK;
+        } else if (formula.isTrue()) {
             Logger.log("Formula " + formula.name + " is true:");
             for (Constraint constraint : formula.constraints) {
                 Logger.log("Constraint " + constraint.name + " is true:", 1);
@@ -81,16 +85,35 @@ public class CspSolver {
             }
 
             return State.SATISFIABLE;
+        } else if (enableDeductionStep) {
+            Logger.log("Deducing new valuations");
+            var narrowed = false;
+            for (Constraint constraint : formula.constraints) {
+                if (constraint.isUnit()) {
+                    Logger.log("Constraint " + constraint.name + " is unit", 1);
+                    Logger.increaseIndentation(2);
+                    for (SimpleBound bound : constraint.simpleBounds) {
+                        if (bound.deduceValuation()) narrowed = true;
+                    }
+                    Logger.decreaseIndentation(2);
+                }
+            }
+
+            if (narrowed) {
+                return State.CONSISTENCY_CHECK;
+            } else {
+                return State.DECISION;
+            }
         }
 
-        if (formula.isFalse()) {
-            Logger.log("Formula " + formula.name + " is false:");
+        if (formula.isInconclusive()) {
+            Logger.log("Formula " + formula.name + " is inconclusive:");
             for (Constraint constraint : formula.constraints) {
-                if (constraint.isFalse()) {
-                    Logger.log("Constraint " + constraint.name + " is false:", 1);
+                if (constraint.isInconclusive()) {
+                    Logger.log("Constraint " + constraint.name + " is inconclusive:", 1);
                     for (SimpleBound bound : constraint.simpleBounds) {
-                        if (bound.isFalse()) {
-                            Logger.log("Simple bound " + bound + " is false with valuation:", 2);
+                        if (bound.isInconclusive()) {
+                            Logger.log("Simple bound " + bound + " is inconclusive with valuation:", 2);
                             Logger.log(bound.x.name + ": " + bound.x, 3);
                             Logger.log(bound.y.name + ": " + bound.y, 3);
                             Logger.log("k: " + bound.k, 3);
@@ -98,38 +121,9 @@ public class CspSolver {
                     }
                 }
             }
-            return State.BACKTRACK;
         }
 
-        if (enableDeductionStep) {
-            Logger.log("Deducing new valuations");
-            for (Constraint constraint : formula.constraints) {
-                if (constraint.isUnit()) {
-                    Logger.log("Constraint " + constraint.name + " is unit", 1);
-                    Logger.increaseIndentation(2);
-                    for (SimpleBound bound : constraint.simpleBounds) {
-                        bound.deduceValuation();
-                    }
-                    Logger.decreaseIndentation(2);
-                }
-            }
-        }
-
-        Logger.log("Formula " + formula.name + " is inconclusive:");
-        for (Constraint constraint : formula.constraints) {
-            if (constraint.isInconclusive()) {
-                Logger.log("Constraint " + constraint.name + " is inconclusive:", 1);
-                for (SimpleBound bound : constraint.simpleBounds) {
-                    if (bound.isInconclusive()) {
-                        Logger.log("Simple bound " + bound + " is inconclusive with valuation:", 2);
-                        Logger.log(bound.x.name + ": " + bound.x, 3);
-                        Logger.log(bound.y.name + ": " + bound.y, 3);
-                        Logger.log("k: " + bound.k, 3);
-                    }
-                }
-            }
-        }
-
+        // Formula doesn't contain a false constraint and is not true either -> "go to 3"
         return State.DECISION;
     }
 
