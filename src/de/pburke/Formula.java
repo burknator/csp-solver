@@ -30,12 +30,20 @@ public class Formula {
         return true;
     }
 
+    /**
+     * @return True, when no constraints are inconclusive and at least one constrait is false. False, when all
+     * constraints are true.
+     */
     public boolean isFalse() {
+        boolean f = false;
         for (Constraint constraint : constraints) {
-            if (constraint.isTrue() || constraint.isInconclusive()) return false;
+            // We need to go through all constraint to make sure none are inconclusive. But once we found one, we can
+            // exit early.
+            if (constraint.isInconclusive()) return false;
+            if (constraint.isFalse()) f = true;
         }
 
-        return true;
+        return f;
     }
 
     /**
