@@ -10,7 +10,6 @@ public class Variable {
     public int max;
     public int min;
 
-
     /**
      * {@inheritDoc}
      * @param name The name for this variable.
@@ -42,10 +41,7 @@ public class Variable {
 
     /**
      * Creates a new valuation, which encapsulates a reference to this variable.
-     * @param min The lower bound of the valuation.
-     * @param max The upper bound of the valuation.
-     * @return An instance of Valuation of this variable.
-     * @throws InvalidVariableCreation
+     * @see Valuation#Valuation(int, int, Variable)
      */
     public Valuation valuation(int min, int max) throws InvalidVariableCreation {
         return new Valuation(min, max, this);

@@ -3,6 +3,12 @@ package de.pburke;
 import de.pburke.exceptions.InvalidVariableCreation;
 
 public class Valuation extends Variable {
+    /**
+     * The variable this valuation is for.
+     *
+     * This allows activating a valuation even if a previous one was already activated for this variable simply by
+     * storing the Valuation instance.
+     */
     public Variable variable;
 
     /**
@@ -12,7 +18,6 @@ public class Valuation extends Variable {
      * {@link #activate()}.
      * 
      * @see Variable#Variable(int, int)
-     * @param variable
      */
     Valuation(Variable variable) throws InvalidVariableCreation {
         super(variable.min, variable.max);
@@ -31,7 +36,8 @@ public class Valuation extends Variable {
     Valuation(int min, int max, Variable variable) throws InvalidVariableCreation {
         super(min, max);
         if (min < variable.min || max > variable.max) {
-            throw new InvalidVariableCreation("The valuation must conform to the upper and lower bounds of the variable it's for.");
+            throw new InvalidVariableCreation("The valuation must conform to the upper and lower bounds of the " +
+                                              "variable it's for.");
         }
 
         this.variable = variable;

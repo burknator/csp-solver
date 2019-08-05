@@ -8,12 +8,31 @@ import java.util.Stack;
 
 public class CspSolver {
     public Formula formula;
+
+    /**
+     * Enable or disable the deduction of new valuations when a constraint is unit.
+     */
     public boolean enableDeductionStep = true;
-    private Stack<Valuation> backtrackAlternatives = new Stack<>();
+
+    /**
+     * The list of variables contained in {@link #formula}.
+     *
+     * From the formula alone, no order of the variable can be obtained. But an order is useful when searching for a
+     * split variable ({@link Variables#findSplitVariable()}) or when logging the variables' valuations.
+     */
     public Variables variables;
 
-    enum State {
-        CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE(Result.SATISFIABLE), NOT_SATISFIABLE(Result.NOT_SATISFIABLE);
+    private Stack<Valuation> backtrackAlternatives = new Stack<>();
+
+    /**
+     * Represents the internal state of the solver.
+     */
+    private enum State {
+        CONSISTENCY_CHECK,
+        BACKTRACK,
+        DECISION,
+        SATISFIABLE(Result.SATISFIABLE),
+        NOT_SATISFIABLE(Result.NOT_SATISFIABLE);
 
         public Result result;
 
@@ -110,7 +129,7 @@ public class CspSolver {
         Valuation upperHalf;
         if (Math.abs(splitVariable.max - splitVariable.min) == 1) {
             // When the distance between min and max is only 1, we split the variable into the two point intervals
-            // [min, min]  and [max, max].
+            // [min, min] and [max, max].
             lowerHalf = splitVariable.valuation(splitVariable.min, splitVariable.min);
             upperHalf = splitVariable.valuation(splitVariable.max, splitVariable.max);
         } else {

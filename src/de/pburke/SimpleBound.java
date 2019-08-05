@@ -23,9 +23,6 @@ public class SimpleBound {
      * 
      * Internally, two point interval variables are created, one with the bounds equal to x, one with the bound equal to
      * 0. k is taken from the parameters of this method. Thus the actual form is x ≥ 0 + k
-     * 
-     * @param x
-     * @param k
      */
     SimpleBound(int x, int k) {
         try {
@@ -66,6 +63,7 @@ public class SimpleBound {
      * @return Whether at least one variable could successfully be narrowed down.
      */
     public boolean deduceValuation() throws InvalidVariableCreation {
+        // If a simple bound is false, there's no need to deduce any new valuations
         if (isFalse()) return false;
 
         var xMax = x.max;
