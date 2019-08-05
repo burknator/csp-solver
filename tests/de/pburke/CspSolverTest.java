@@ -1,7 +1,6 @@
 package de.pburke;
 
 import de.pburke.exceptions.BaseException;
-import de.pburke.exceptions.InvalidVariableCreation;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -182,17 +181,5 @@ public class CspSolverTest {
         /*fail("The formula is satisfiable but no the way the solver currently detects it! Build listeners into the" +
                 "solver to check every move and make sure the steps the solver takes are exactly as in the solution in" +
                 "the assignment");*/
-    }
-
-    @Test
-    public void splitRange() {
-        // 3,4,5,6 -> (4+5)/2 = 9/2 = 4.5
-        assertEquals(4, solver.splitRange(3, 6));
-
-        // -6, -5, -4, -3, -2, -1, 0, 1, 2, 3 -> -1.5 -> -1
-        assertEquals(-1, solver.splitRange(-6, 3));
-
-        // 1,2,3 -> 2
-        assertEquals(2, solver.splitRange(1,3));
     }
 }

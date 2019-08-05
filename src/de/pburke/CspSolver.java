@@ -67,59 +67,33 @@ public class CspSolver {
     public State consistencyCheck() throws InvalidVariableCreation {
         Logger.log("Consistency check");
 
+        log(formula);
+
         if (formula.hasFalseConstraint()) {
             Logger.log("At least one constraint in formula " + formula + " is false, backtracking.");
             return State.BACKTRACK;
         } else if (formula.isTrue()) {
-            Logger.log("Formula " + formula.name + " is true:");
-            for (Constraint constraint : formula.constraints) {
-                Logger.log("Constraint " + constraint.name + " is true:", 1);
-                for (SimpleBound bound : constraint.simpleBounds) {
-                    if (bound.isTrue()) {
-                        Logger.log("Simple bound " + bound + " is true with valuation:", 2);
-                        Logger.log(bound.x.name + ": " + bound.x, 3);
-                        Logger.log(bound.y.name + ": " + bound.y, 3);
-                        Logger.log("k: " + bound.k, 3);
-                    }
-                }
-            }
-
             return State.SATISFIABLE;
         } else if (enableDeductionStep) {
             Logger.log("Deducing new valuations");
-            var narrowed = false;
+            var narrowingSuccessful = false;
             for (Constraint constraint : formula.constraints) {
-                if (constraint.isUnit()) {
-                    Logger.log("Constraint " + constraint.name + " is unit", 1);
-                    Logger.increaseIndentation(2);
-                    for (SimpleBound bound : constraint.simpleBounds) {
-                        if (bound.deduceValuation()) narrowed = true;
-                    }
-                    Logger.decreaseIndentation(2);
+                if (constraint.isUnit()) continue;
+
+                Logger.log("Constraint " + constraint.name + " is unit", 1);
+                Logger.increaseIndentation(2);
+                for (SimpleBound bound : constraint.simpleBounds) {
+                    if (bound.deduceValuation()) narrowingSuccessful = true;
                 }
+                Logger.decreaseIndentation(2);
             }
 
-            if (narrowed) {
+            if (narrowingSuccessful) {
+                Logger.log("Successfully narrowed down a variable");
                 return State.CONSISTENCY_CHECK;
             } else {
+                Logger.log("Couldn't narrow down any variables");
                 return State.DECISION;
-            }
-        }
-
-        if (formula.isInconclusive()) {
-            Logger.log("Formula " + formula.name + " is inconclusive:");
-            for (Constraint constraint : formula.constraints) {
-                if (constraint.isInconclusive()) {
-                    Logger.log("Constraint " + constraint.name + " is inconclusive:", 1);
-                    for (SimpleBound bound : constraint.simpleBounds) {
-                        if (bound.isInconclusive()) {
-                            Logger.log("Simple bound " + bound + " is inconclusive with valuation:", 2);
-                            Logger.log(bound.x.name + ": " + bound.x, 3);
-                            Logger.log(bound.y.name + ": " + bound.y, 3);
-                            Logger.log("k: " + bound.k, 3);
-                        }
-                    }
-                }
             }
         }
 
@@ -129,20 +103,23 @@ public class CspSolver {
 
     public State decision() throws InvalidVariables, InvalidVariableCreation {
         Logger.log("Decision step");
+
         var splitVariable = variables.findSplitVariable();
 
-        int diff = Math.abs(splitVariable.max - splitVariable.min);
         Valuation lowerHalf;
         Valuation upperHalf;
-        if (diff == 1) {
+        if (Math.abs(splitVariable.max - splitVariable.min) == 1) {
+            // When the distance between min and max is only 1, we split the variable into the two point intervals
+            // [min, min]  and [max, max].
             lowerHalf = splitVariable.valuation(splitVariable.min, splitVariable.min);
             upperHalf = splitVariable.valuation(splitVariable.max, splitVariable.max);
         } else {
-            int half = splitRange(splitVariable.min, splitVariable.max);
+            int half = (splitVariable.max + splitVariable.min) / 2;
 
             lowerHalf = splitVariable.valuation(splitVariable.min, half);
             upperHalf = splitVariable.valuation(half + 1, splitVariable.max);
         }
+
         Logger.log("Splitting variable " + splitVariable.name + " into " + lowerHalf + " and " + upperHalf);
         backtrackAlternatives.push(upperHalf);
         Logger.log("Opening decision level " + getDecisionLevel());
@@ -167,7 +144,39 @@ public class CspSolver {
         return State.CONSISTENCY_CHECK;
     }
 
-    public int splitRange(int min, int max) {
-        return (max + min) / 2;
+    private void log(SimpleBound bound, int baseIndent) {
+        var state = "";
+        if (bound.isInconclusive()) state = "inconclusive";
+        if (bound.isTrue()) state = "true";
+        if (bound.isFalse()) state = "false";
+
+        Logger.log("Simple bound " + bound + " is " + state + " with valuation:", baseIndent + 1);
+        Logger.log(bound.x.name + ": " + bound.x, baseIndent + 2);
+        Logger.log(bound.y.name + ": " + bound.y, baseIndent + 2);
+        Logger.log("k: " + bound.k, baseIndent + 2);
+    }
+
+    private void log(Constraint constraint, int baseIndent) {
+        var state = "";
+        if (constraint.isTrue()) state = "true";
+        if (constraint.isFalse()) state = "false";
+        if (constraint.isInconclusive()) state = "inconclusive";
+
+        Logger.log("Constraint " + constraint.name + " is " + state + ":", baseIndent + 1);
+        for (SimpleBound bound : constraint.simpleBounds) {
+            log(bound, 1);
+        }
+    }
+
+    private void log(Formula formula) {
+        var state = "";
+        if (formula.isTrue()) state = "true";
+        if (formula.isFalse()) state = "false";
+        if (formula.isInconclusive()) state = "inconclusive";
+
+        Logger.log("Formula " + formula.name + " is " + state + ":");
+        for (Constraint constraint : formula.constraints) {
+            log(constraint, 0);
+        }
     }
 }

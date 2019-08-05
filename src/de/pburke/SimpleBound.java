@@ -72,14 +72,18 @@ public class SimpleBound {
         var success = false;
         if (!x.isPointInterval()) {
             var newMin = Math.max(x.min, y.min + k);
-            if (newMin > x.min) success = true;
-            x.valuation(newMin, x.max).activate();
+            if (newMin > x.min) {
+                success = true;
+                x.valuation(newMin, x.max).activate();
+            }
         }
 
         if (!y.isPointInterval()) {
             var newMax = Math.max(y.min, Math.min(y.max, xMax - k));
-            if (newMax < y.max) success = true;
-            y.valuation(y.min, newMax).activate();
+            if (newMax < y.max) {
+                success = true;
+                y.valuation(y.min, newMax).activate();
+            }
         }
 
         return success;
