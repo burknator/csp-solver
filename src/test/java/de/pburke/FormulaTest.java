@@ -3,8 +3,6 @@ package de.pburke;
 import de.pburke.exceptions.InvalidVariableCreation;
 import org.junit.Test;
 
-import java.text.Normalizer;
-
 import static org.junit.Assert.*;
 
 public class FormulaTest {
