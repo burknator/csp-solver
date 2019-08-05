@@ -44,7 +44,7 @@ public class Variables {
     }
 
     public boolean isValid() {
-        if (valid == null) checkValidity();
+        checkValidity();
 
         return valid;
     }
@@ -64,10 +64,12 @@ public class Variables {
 
         Variable splitVariable;
 
+        int i= 0;
         do {
             splitVariable = variables.get(variableIndex);
             variableIndex = (variableIndex + 1) % variables.size();
-        } while(splitVariable.isPointInterval());
+            i++;
+        } while(splitVariable.isPointInterval() && i < variables.size());
 
         return splitVariable;
     }
