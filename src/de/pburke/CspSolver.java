@@ -13,7 +13,13 @@ public class CspSolver {
     public Variables variables;
 
     enum State {
-        CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE, NOT_SATISFIABLE
+        CONSISTENCY_CHECK, BACKTRACK, DECISION, SATISFIABLE(Result.SATISFIABLE), NOT_SATISFIABLE(Result.NOT_SATISFIABLE);
+
+        public Result result;
+
+        State() { }
+
+        State(Result result) { this.result = result; }
     }
 
     enum Result {
@@ -47,13 +53,10 @@ public class CspSolver {
                     currentState = decision();
                     break;
                 case SATISFIABLE:
-                    variables.logValuation();
-                    Logger.log("Completed in " + steps + " steps.");
-                    return Result.SATISFIABLE;
                 case NOT_SATISFIABLE:
                     variables.logValuation();
                     Logger.log("Completed in " + steps + " steps.");
-                    return Result.NOT_SATISFIABLE;
+                    return currentState.result;
                 default:
                     throw new BaseException("Something horrible must've happened!");
             }
