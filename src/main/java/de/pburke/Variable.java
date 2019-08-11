@@ -50,4 +50,8 @@ public class Variable {
     public String toString() {
         return "[" + this.min + ", " + this.max + "]";
     }
+
+    public String getName() {
+        return name;
+    }
 }
