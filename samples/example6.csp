@@ -1,0 +1,7 @@
+DECL
+	x 0 1;
+	y 4 20;
+	z 10 15;
+	
+FORMULA
+	x >= y + 0 v y >= z + 4;

@@ -1,0 +1,25 @@
+// 4 queens example:
+// - any queen can be in any of the 16 cells
+// - only one queen can occupy the same row and same column
+// - only one queen can occupy the same diagonal
+// expected result:
+//   A=3,3 B=5,5 C=12,12 D=14,14
+//   or A=2,2 B=8,8 C=9,9 D=15,15
+DECL
+	A 1 16;
+	B 1 16;
+	C 1 16;
+	D 1 16;
+	
+FORMULA
+	D >= C + 1;
+	D >= C + 6 v C >= D + -2;
+	C >= D + -7;
+	
+	C >= B + 1;
+	C >= B + 6 v B >= C + -2;
+	B >= C + -7;
+	
+	B >= A + 1;
+	B >= A + 6 v A >= B + -2;
+	A >= B + -7;

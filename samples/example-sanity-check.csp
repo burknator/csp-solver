@@ -1,0 +1,7 @@
+DECL
+	x 0 1;
+	y 2 3;
+	
+FORMULA
+	x >= y + 0;
+	y >= x + 5;
