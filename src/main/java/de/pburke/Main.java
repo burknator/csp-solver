@@ -16,6 +16,7 @@ public class Main {
         while (scnr.hasNextLine()) {
             input += " " + scnr.nextLine();
         }
+        scnr.close();
 
         Parser parser = new Parser();
         var f = parser.parse(input);

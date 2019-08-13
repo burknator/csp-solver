@@ -89,11 +89,7 @@ public class Parser {
                      i = skipWhiteSpace(input, i);
 
                      if (input.substring(i, i+1).equals(";")) { //pure Integer bound?
-                         if (simpleBoundY.substring(0, 1).equals("-")) {
-                             simpleBoundK = (-1) * Integer.parseInt(simpleBoundY);
-                         } else {
-                             simpleBoundK = Integer.parseInt(simpleBoundY);
-                         }
+                         simpleBoundK = Integer.parseInt(simpleBoundY);
                          i++;
                          if (i+1 >= input.length()) { //end of input-String?
                              sbList.add(createSimpleBound(simpleBoundX, simpleBoundY, simpleBoundK, varList));
@@ -112,11 +108,9 @@ public class Parser {
 
                          j = 0;
                          j = determineCharacterCount(input, i);
-                         if (input.substring(i, i + 1).equals("-")) {
-                             simpleBoundK = (-1) * Integer.parseInt(input.substring(i + 1, i + j));
-                         } else {
-                             simpleBoundK = Integer.parseInt(input.substring(i, i + j));
-                         }
+                         
+                         simpleBoundK = Integer.parseInt(input.substring(i, i + j));
+                         
                          sbList.add(createSimpleBound(simpleBoundX, simpleBoundY, simpleBoundK, varList));
                          i += j;
                          i = skipWhiteSpace(input, i);
