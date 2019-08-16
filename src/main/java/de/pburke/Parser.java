@@ -10,7 +10,7 @@ public class Parser {
         FORMULA;
     }
 
-    private ArrayList varList = new ArrayList();
+    private ArrayList<Variable> varList = new ArrayList<>();
 
     public Parser() {};
 
@@ -201,7 +201,7 @@ public class Parser {
         return formula;
     }
 
-    public ArrayList getVariableList() {
+    public ArrayList<Variable> getVariableList() {
         return varList;
     }
 }
