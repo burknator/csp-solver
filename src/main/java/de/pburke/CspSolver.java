@@ -12,7 +12,7 @@ public class CspSolver {
     /**
      * Enable or disable the deduction of new valuations when a constraint is unit.
      */
-    public boolean enableDeductionStep = true;
+    public boolean enableDeductionStep = false;
 
     /**
      * The list of variables contained in {@link #formula}.
@@ -58,6 +58,14 @@ public class CspSolver {
     public Result start() throws BaseException {
         var currentState = State.CONSISTENCY_CHECK;
         var steps = 0;
+
+        if (!enableDeductionStep) {
+            Logger.log("Using algorithm A.");
+        } else {
+            Logger.log("Using algorithm B.");
+        }
+
+        Logger.log("Solving formula: " + formula);
 
         while (true) {
             Logger.log("-".repeat(72));
