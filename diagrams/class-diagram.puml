@@ -1,0 +1,80 @@
+@startuml Class diagram csp-solver
+
+!include _uml.iuml
+
+class State <<enum>> {
+    CONSISTENCY_CHECK
+    BACKTRACK
+    DECISION
+}
+
+class Result <<enum>> {
+    SATISFIABLE
+    NOT_SATISFIABLE
+}
+
+class CspSolver {
+    Formula formula
+    Stack<Valuation> backtrackAlternatives
+    bool enableDeductionStep
+    Variables variables
+    State consistencyCheck()
+    State backtrack()
+    State decision()
+    Result start()
+}
+
+CspSolver .> Formula
+CspSolver ..> Valuation
+Result <.. CspSolver
+State <.. CspSolver
+CspSolver ..> Variables
+
+class Formula {
+    bool isTrue()
+    bool isFalse()
+}
+
+Formula "1" *-- "1..* {constraints}" Constraint: >
+
+class Variable {
+    int min
+    int max
+    bool isPointInterval()
+}
+
+class Variables {
+    Variable findSplitVariable()
+}
+
+Variables "1" *- "1..* {variables}" Variable: >
+
+class Valuation {
+    Variable variable
+
+    void activate()
+}
+
+Valuation --|> Variable
+
+class SimpleBound {
+    Variable x
+    Variable y
+    int k
+
+    bool isTrue()
+    bool isFalse()
+    bool isInconclusive()
+    bool deduceValuation()
+}
+
+class Constraint {
+    bool isTrue()
+    bool isFalse()
+    bool isUnit()
+}
+
+Constraint "1" *-- "1..* {simpleBounds}" SimpleBound: >
+
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+!include _uml.iuml
+
+object "lowerHalf:Valuation" as lower
+object "upperHalf:Valuation" as upper
+
+lower : min = 3
+lower : max = 4
+lower : variable = @44
+
+upper : min = 5
+upper : max = 6
+upper : variable = @44
+
+object "backtrackAlternatives" as ba
+
+ba : 0 = upperHalf
+ba : size = 1
+
+object "@44:Variable" as variable
+note right: Bounds changed
+
+variable : min = 3
+variable : max = 4
+
+object ":SimpleBound" as sb
+note top: Now it's\ntrue
+
+sb : x = @44
+sb : y = ...
+sb : k = ...
+sb : isTrue = true
+sb : isFalse = false
+sb : isInconclusive = false
+
+ba -- upper
+
+sb - variable
+lower -- variable
+upper -- variable
+
+@enduml
